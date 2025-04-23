@@ -26,7 +26,10 @@ class CE_weight(nn.Module):
         cls_num_list = torch.tensor(cls_num_list, dtype=torch.float32, device='cuda')
 
         # weight of each class for imbalance dataset
-        weight = torch.cuda.FloatTensor(1.0 / cls_num_list)
+        # weight = torch.cuda.FloatTensor(1.0 / cls_num_list)
+        weight = torch.tensor(1.0 / np.array(cls_num_list), dtype=torch.float32, device='cuda')
+
+
         self.weight = (weight / weight.sum()) * len(cls_num_list)
 
         #hyper-parameters of stages
@@ -52,12 +55,16 @@ class CE_weight(nn.Module):
             return F.cross_entropy(x,target, weight=per_cls_weights)
 
         else:
-            f1_score = torch.cuda.FloatTensor(f1_score)
-            weight = torch.cuda.FloatTensor(1.0 / f1_score)
+            # f1_score = torch.cuda.FloatTensor(f1_score)
+            # weight = torch.cuda.FloatTensor(1.0 / f1_score)
+            f1_score = torch.tensor(1.0 / np.array(f1_score), dtype=torch.float32, device='cuda')
+            weight = (f1_score / f1_score.sum()) * len(self.cls_num_list)
             self.weight = (weight / weight.sum()) * len(self.cls_num_list)
             now_power = (e - self.E2) / (self.E - self.E2)
             per_cls_weights = [torch.pow(num, now_power) for num in self.weight]
-            per_cls_weights = torch.cuda.FloatTensor(per_cls_weights)
+            # per_cls_weights = torch.cuda.FloatTensor(per_cls_weights)
+            # per_cls_weights = torch.tensor(per_cls_weights, dtype=torch.float32, device='cuda')
+            per_cls_weights = torch.tensor(per_cls_weights, dtype=torch.float32, device='cuda')
             return F.cross_entropy(x, target, weight=per_cls_weights)
 
 class BHP(nn.Module):
