@@ -129,6 +129,7 @@ class isic2018_dataset(Dataset):
             idx_str = str(item)
             with h5py.File(self.path, 'r') as f:
                 # Get original image
+                self.num_samples = len(f['images'])
                 image = f['images'][idx_str][:]
                 
                 # Get mask (equivalent to seg_prior in your original code)
@@ -157,7 +158,10 @@ class isic2018_dataset(Dataset):
                     return image, label, mask, contour
 
     def __len__(self):
-        return len(list(self.df['image']))
+        if self.dataset_type != 'h5_file':
+            return len(list(self.df['image']))
+        else:
+            return self.num_samples
 
 # class ISIC2018Dataset_enhanced(Dataset):
 #     def __init__(self, h5_path, geo_transform=None, normalize_transform=None, task="train"):
