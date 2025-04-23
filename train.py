@@ -151,24 +151,30 @@ def main(args):
             # lr_scheduler_proxies.step()
             optimizer_proxies.zero_grad()
 
-            for batch_index, (data, label) in tqdm.tqdm(enumerate(train_iterator), total=len(train_iterator)):
+            for batch_index, (data, label), original_image in tqdm.tqdm(enumerate(train_iterator), total=len(train_iterator)):
 
                 #visualize the data
                 # if batch_index == 0:
                 #find shape of data
                 print("data shape: ",data[0].shape)
                 print("label shape: ",label[0].shape)
-                data = data[0][5].cpu().numpy()
+                data = data[0].cpu().numpy()
+                print("data shape: ",data.shape)
                 label = label[0].cpu().numpy()
-                img_tensor = data[0][5]
+                img_tensor = data[5]
 
                 # Method 1: Permute dimensions to change from (C,H,W) to (H,W,C)
                 img_numpy = np.transpose(img_tensor, (1, 2, 0))
                 plt.figure(figsize=(10, 10))
+                plt.subplot(1, 2, 1)
+
                 plt.imshow(img_numpy)
                 # plt.title(f"Label: {label_np[0]}")
                 plt.axis('on')  # Display axes
                 
+                plt.subplot(1, 2, 2)
+                plt.imshow(original_image[0][5].cpu().numpy())
+
                 # For Kaggle specifically
                 plt.tight_layout()
                 plt.savefig('sample_image.png')  # Save the figure first
