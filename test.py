@@ -103,7 +103,7 @@ def main(args):
                                       batch_size=1, shuffle=False, num_workers=2)
     elif args.dataset == 'ISIC2018_enhanced':
         
-        test_iterator = DataLoader(isic2018_dataset(path=args.data_path, transform=augmentation_test, mode='test', dataset_type='h5_file'),
+        test_iterator = DataLoader(isic2018_dataset(path=args.data_path, transform=augmentation_test, mode='test', dataset_type='h5_file',enhanced = args.enhanced),
                                    batch_size=1, shuffle=False, num_workers=2)
 
     else:
@@ -152,6 +152,7 @@ parser.add_argument('--data_path', type=str, default='./data/ISIC2019/', help='t
 parser.add_argument('--dataset', type=str, default='ISIC2019',choices=['ISIC2018','ISIC2019',"ISIC2018_enhanced"], help='the name of the dataset')
 parser.add_argument('--model_path', type=str, default = './weights/model-ISIC2019.pth', help='the path of the model')
 parser.add_argument('--log_path', type=str, default = None, help='the path of the log')
+parser.add_argument('--enhanced', type=bool, default=False, help='whether to use enhanced dataset')
 
 
 # training parameters

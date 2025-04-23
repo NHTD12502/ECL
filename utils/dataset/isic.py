@@ -166,6 +166,7 @@ class isic2018_dataset(Dataset):
 
 
     def __getitem__(self, item):
+        enhanced_flag = False
         if self.dataset_type != 'h5_file':
             #=============================================== old
             img_path = os.path.join(self.path,'ISIC2018_Dataset',self.df.iloc[item]['category'],f"{self.df.iloc[item]['image']}.jpg")
@@ -214,7 +215,10 @@ class isic2018_dataset(Dataset):
                                     #====================  
 
                 if self.enhanced: # new code: enhanced
-                    print("Enhancement mode")
+                    if enhanced_flag == False:
+                        enhanced_flag = True
+                        print("Enhancement mode")
+                    
                     if self.transform is not None:
                         if self.mode == 'train':
                             original_image = image_pil.copy()  # Save the original image for later use
@@ -236,7 +240,9 @@ class isic2018_dataset(Dataset):
                     
                     #====================  
                 else:# original code: not enhanced
-                    print("Original mode")
+                    if enhanced_flag == False:
+                        print("Original mode")
+                        enhanced_flag = True
                     if self.transform is not None:
                         if self.mode == 'train':
                             img1 = self.transform[0](image_pil)
