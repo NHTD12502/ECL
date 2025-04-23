@@ -117,7 +117,7 @@ def main(args):
                                     batch_size=args.batch_size, shuffle=True, num_workers=4, drop_last=True)
         valid_iterator = DataLoader(isic2018_dataset(path=args.data_path_val, transform=augmentation_test, mode='valid', dataset_type='h5_file'),
                                     batch_size=1, shuffle=False, num_workers=2)
-        test_iterator = DataLoader(isic2018_dataset(path=args.data_path, transform=augmentation_test, mode='test', dataset_type='h5_file'),
+        test_iterator = DataLoader(isic2018_dataset(path=args.data_path_test, transform=augmentation_test, mode='test', dataset_type='h5_file'),
                                    batch_size=1, shuffle=False, num_workers=2)
 
 
@@ -177,14 +177,14 @@ def main(args):
 
                 train_loss += loss.item()
 
-                if batch_index % 50 == 0 and batch_index != 0:
-                    predicted_results = torch.argmax(output, dim=1)
-                    correct_num = (predicted_results.cpu() == diagnosis_label.cpu()).sum().item()
-                    acc = correct_num / len(diagnosis_label)
-                    print('Training epoch: {} [{}/{}], Loss: {:.4f}, Accuracy: {:.4f}, Learning rate: {}'.format(e,
-                        batch_index * args.batch_size, len(train_iterator.dataset), loss.item(), acc, optimizer.param_groups[0]['lr']))
-                    print('Training epoch: {} [{}/{}], Loss: {:.4f}, Accuracy: {:.4f}, Learning rate: {}'.format(e,
-                        batch_index * args.batch_size, len(train_iterator.dataset), loss.item(), acc, optimizer.param_groups[0]['lr']),file=log_file)
+                # if batch_index % 50 == 0 and batch_index != 0:
+                #     predicted_results = torch.argmax(output, dim=1)
+                #     correct_num = (predicted_results.cpu() == diagnosis_label.cpu()).sum().item()
+                #     acc = correct_num / len(diagnosis_label)
+                #     print('Training epoch: {} [{}/{}], Loss: {:.4f}, Accuracy: {:.4f}, Learning rate: {}'.format(e,
+                #         batch_index * args.batch_size, len(train_iterator.dataset), loss.item(), acc, optimizer.param_groups[0]['lr']))
+                #     print('Training epoch: {} [{}/{}], Loss: {:.4f}, Accuracy: {:.4f}, Learning rate: {}'.format(e,
+                #         batch_index * args.batch_size, len(train_iterator.dataset), loss.item(), acc, optimizer.param_groups[0]['lr']),file=log_file)
 
 
             optimizer_proxies.step()
@@ -319,6 +319,7 @@ parser = argparse.ArgumentParser(description='Training for the classification ta
 #dataset
 parser.add_argument('--data_path', type=str, default='./data/ISIC2018/', help='the path of the data')
 parser.add_argument('--data_path_val', type=str, default='./data/ISIC2018/', help='the path of the data validation set')
+parser.add_argument('--data_path_test', type=str, default='./data/ISIC2018/', help='the path of the data test set')
 parser.add_argument('--dataset', type=str, default='ISIC2018',choices=['ISIC2018','ISIC2019','ISIC2018_enhanced'], help='the name of the dataset')
 parser.add_argument('--model_path', type=str, default="./Experiment/ISIC_CL/ISIC2018/test_git/", help='the path of the model')
 parser.add_argument('--log_path', type=str, default=None, help='the path of the log')
