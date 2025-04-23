@@ -141,7 +141,7 @@ class isic2018_dataset(Dataset):
                 # Get original image
                 # self.num_samples = len(f['images'])
                 image = f['images'][idx_str][:]
-                
+                image_pil = Image.fromarray(image)
                 # Get mask (equivalent to seg_prior in your original code)
                 mask = f['masks'][idx_str][:].astype(np.float32)
                 
@@ -157,12 +157,12 @@ class isic2018_dataset(Dataset):
                 
                 if self.transform is not None:
                     if self.mode == 'train':
-                        img1 = self.transform[0](image)
-                        img2 = self.transform[1](image)
+                        img1 = self.transform[0](image_pil)
+                        img2 = self.transform[1](image_pil)
 
                         return [img1,img2],label
                     else:
-                        img1 = self.transform(image)
+                        img1 = self.transform(image_pil)
                         return img1, label
                 else:
                     return image, label, mask, contour
