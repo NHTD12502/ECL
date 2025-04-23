@@ -157,6 +157,9 @@ def main(args):
                     label = label.cuda()
                 diagnosis_label = label.squeeze(1)
 
+                if diagnosis_label.dim() > 1:
+                    diagnosis_label = diagnosis_label.squeeze()
+                    
                 optimizer.zero_grad()
 
                 output, feat_mlp = model(data)
