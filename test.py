@@ -15,6 +15,7 @@
 @time:2023/7/8 17:38
 '''
 
+import h5py
 
 import argparse
 import torch
@@ -32,6 +33,13 @@ from utils.eval_metrics import ConfusionMatrix, Auc
 from models.ecl import ECL_model,balanced_proxies
 from models.loss import CE_weight,BHP
 
+'''function for counting cls_num_list in h5 file'''
+def count_class_label (h5_file):
+    with h5py.File(h5_file ,'r' ) as f:
+        label = f['metadata/labels'][:]
+        label_count = Counter(label)
+        cls_num_list = [label_count.get(i,0) for i in range (7)]
+        return cls_num_list
 
 '''function for saving model'''
 def model_snapshot(model,new_modelpath,old_modelpath=None,only_bestmodel=False):
@@ -192,6 +200,10 @@ if __name__ == '__main__':
     elif args.dataset == 'ISIC2019':
         args.cls_num_list = [519, 1993, 1574, 143, 2712, 7725, 376, 151]
         args.num_classes = 8
+    elif args.dataset == 'ISIC2018_enhanced':
+        # find the number of classes and the number of samples for each class
+        args.cls_num_list = count_class_label(args.data_path)
+        args.num_classes = 7
     else:
         raise Exception("Invalid dataset name!")
 
