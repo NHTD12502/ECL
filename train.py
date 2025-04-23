@@ -19,6 +19,7 @@ import time
 import torch.nn.functional as F
 import torch.nn as nn
 import h5py
+import tqdm
 
 from utils.dataset.isic import isic2018_dataset, isic2019_dataset, augmentation_rand, augmentation_sim,augmentation_test
 from utils.eval_metrics import ConfusionMatrix, Auc
@@ -149,7 +150,7 @@ def main(args):
             # lr_scheduler_proxies.step()
             optimizer_proxies.zero_grad()
 
-            for batch_index, (data, label) in enumerate(train_iterator):
+            for batch_index, (data, label) in tqdm.tqdm(enumerate(train_iterator), total=len(train_iterator)):
 
                 if args.cuda:
                     for i in range(len(data)):
