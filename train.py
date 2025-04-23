@@ -159,7 +159,7 @@ def main(args):
 
                 if diagnosis_label.dim() > 1:
                     diagnosis_label = diagnosis_label.squeeze()
-                    
+
                 optimizer.zero_grad()
 
                 output, feat_mlp = model(data)
@@ -168,6 +168,7 @@ def main(args):
                 feat_mlp = torch.cat([feat_mlp[0].unsqueeze(1), feat_mlp[1].unsqueeze(1)], dim=1)
                 loss_ce = criterion_ce(output, diagnosis_label, (e+1), f_score_list)
                 loss_bhp = criterion_bhp(output_proxy, feat_mlp, diagnosis_label)
+                print("loss_ce: {:.4f}, loss_bhp: {:.4f}".format(loss_ce.item(), loss_bhp.item()))
                 loss = alpha * loss_ce + beta * loss_bhp
                 loss.backward()
 
