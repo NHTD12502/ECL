@@ -173,7 +173,7 @@ def main(args):
                 plt.axis('on')  # Display axes
                 
                 plt.subplot(1, 2, 2)
-                plt.imshow(original_image[0][5].cpu().numpy())
+                plt.imshow(original_image[5].cpu().numpy())
 
                 # For Kaggle specifically
                 plt.tight_layout()
