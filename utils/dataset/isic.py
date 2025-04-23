@@ -237,7 +237,7 @@ class isic2018_dataset(Dataset):
                             img1,mask1,contour1 = self.transform(image_pil,mask,contour)
 
                             # Enhance the image using mask and contour
-                            img1, mask, contour = enhance_image(img1, mask, contour, enhanced_type='3channel')
+                            img1, mask1, contour1 = enhance_image(img1, mask1, contour1, enhanced_type='3channel')
 
                             return img1, label
                     else:
