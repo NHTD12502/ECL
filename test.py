@@ -92,6 +92,11 @@ def main(args):
     elif args.dataset == 'ISIC2019':
         test_iterator = DataLoader(isic2019_dataset(path=args.data_path, transform=augmentation_test, mode='test'),
                                       batch_size=1, shuffle=False, num_workers=2)
+    elif args.dataset == 'ISIC2018_enhanced':
+        
+        test_iterator = DataLoader(isic2018_dataset(path=args.data_path, transform=augmentation_test, mode='test', dataset_type='h5_file'),
+                                   batch_size=1, shuffle=False, num_workers=2)
+
     else:
         raise ValueError("dataset error")
 
@@ -143,7 +148,7 @@ parser.add_argument('--log_path', type=str, default = None, help='the path of th
 # training parameters
 parser.add_argument('--cuda', type=bool, default=True, help='whether to use cuda')
 parser.add_argument('--seed', type=int, default=1, help='random seed')
-parser.add_argument('--gpu', type=str, default='1', help='gpu device ids for CUDA_VISIBLE_DEVICES')
+parser.add_argument('--gpu', type=str, default='0', help='gpu device ids for CUDA_VISIBLE_DEVICES')
 
 
 # hyperparameters for model
