@@ -158,12 +158,12 @@ def main(args):
                 #find shape of data
                 print("data shape: ",data[0].shape)
                 print("label shape: ",label[0].shape)
-                # data = data[0].cpu().numpy()
+                data = data[0].cpu().numpy()
                 label = label[0].cpu().numpy()
                 img_tensor = data[0]
 
                 # Method 1: Permute dimensions to change from (C,H,W) to (H,W,C)
-                img_numpy = np.transpose(img_numpy, (1, 2, 0))
+                img_numpy = np.transpose(img_tensor, (1, 2, 0))
                 plt.imshow(img_numpy)
                 # plt.imshow(data[0])
                 # plt.title(label[0])
