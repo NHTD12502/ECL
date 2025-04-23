@@ -215,12 +215,12 @@ class isic2018_dataset(Dataset):
                     if self.transform is not None:
                         if self.mode == 'train':
                             original_image = image_pil.copy()  # Save the original image for later use
-                            img1,mask,contour = self.transform[0](image_pil,mask,contour)
-                            img2,mask,contour = self.transform[1](image_pil,mask,contour)
+                            img1,mask1,contour1 = self.transform[0](image_pil,mask,contour)
+                            img2,mask2,contour2 = self.transform[1](image_pil,mask,contour)
 
                             # Enhance the image using mask and contour
-                            img1, mask, contour = enhance_image(img1, mask, contour, enhanced_type='3channel')
-                            img2, mask, contour = enhance_image(img2, mask, contour, enhanced_type='3channel')
+                            img1, mask, contour = enhance_image(img1, mask1, contour1, enhanced_type='3channel')
+                            img2, mask, contour = enhance_image(img2, mask2, contour2, enhanced_type='3channel')
                             
 
                             return [img1,img2],label, original_image
