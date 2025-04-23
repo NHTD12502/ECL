@@ -77,7 +77,7 @@ class ConfusionMatrix(object):
 def Auc(pro_list,lab_list,classnum,File):
     pro_array = np.array(pro_list)
     #label to onehot
-    lab_tensor = torch.tensor(lab_list)
+    lab_tensor = torch.tensor(np.array(lab_list))
     lab_tensor = lab_tensor.reshape((lab_tensor.shape[0],1))
     lab_onehot = torch.zeros(lab_tensor.shape[0],classnum)
     lab_onehot.scatter_(dim=1, index=lab_tensor, value=1)

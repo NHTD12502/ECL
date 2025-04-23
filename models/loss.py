@@ -46,6 +46,8 @@ class CE_weight(nn.Module):
         :param f1_score: f1 score on validation set
         :return: loss
         '''
+        device = x.device
+        weight = self.weight.to(device)
         if e <= self.E1:
             # print(f"Output shape: {x.shape}, Target shape: {target.shape}")
             # print(f"Output dtype: {x.dtype}, Target dtype: {target.dtype}")
@@ -60,7 +62,11 @@ class CE_weight(nn.Module):
         else:
             # f1_score = torch.cuda.FloatTensor(f1_score)
             # weight = torch.cuda.FloatTensor(1.0 / f1_score)
-            f1_score = torch.tensor(1.0 / np.array(f1_score), dtype=torch.float32, device='cuda')
+            f1_array = np.array(f1_score)
+            f1_array = np.clip(f1_array, 1e-10, None)
+            f1_score = torch.tensor(1.0 / f1_array, dtype=torch.float32, device=device)
+
+            # f1_score = torch.tensor(1.0 / np.array(f1_score), dtype=torch.float32, device='cuda')
             weight = (f1_score / f1_score.sum()) * len(self.cls_num_list)
             self.weight = (weight / weight.sum()) * len(self.cls_num_list)
             now_power = (e - self.E2) / (self.E - self.E2)
