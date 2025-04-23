@@ -164,10 +164,19 @@ def main(args):
 
                 # Method 1: Permute dimensions to change from (C,H,W) to (H,W,C)
                 img_numpy = np.transpose(img_tensor, (1, 2, 0))
+                plt.figure(figsize=(10, 10))
                 plt.imshow(img_numpy)
-                # plt.imshow(data[0])
-                # plt.title(label[0])
-                plt.show()
+                plt.title(f"Label: {label_np[0]}")
+                plt.axis('on')  # Display axes
+                
+                # For Kaggle specifically
+                plt.tight_layout()
+                plt.savefig('sample_image.png')  # Save the figure first
+                
+                # Try different display methods
+                plt.show()  # Display the figure
+                
+                plt.close()
 
                 if args.cuda:
                     for i in range(len(data)):
