@@ -145,8 +145,8 @@ def main(args):
             start_time_epoch = time.time()
             train_loss = 0.0
 
-            lr_scheduler.step()
-            lr_scheduler_proxies.step()
+            # lr_scheduler.step()
+            # lr_scheduler_proxies.step()
             optimizer_proxies.zero_grad()
 
             for batch_index, (data, label) in enumerate(train_iterator):
@@ -183,7 +183,8 @@ def main(args):
 
 
             optimizer_proxies.step()
-
+            lr_scheduler.step()
+            lr_scheduler_proxies.step()
             print("Epoch {} complete! Average Training loss: {:.4f}".format(e, train_loss / len(train_iterator)))
             print("Epoch {} complete! Average Training loss: {:.4f}".format(e, train_loss / len(train_iterator)),file=log_file)
 

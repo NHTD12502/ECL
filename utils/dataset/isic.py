@@ -154,6 +154,7 @@ class isic2018_dataset(Dataset):
                 
                 # Use a placeholder label (you should replace this with actual labels if available)
                 label = self.labels[item]
+                label = torch.LongTensor([label]).unsqueeze(0)
                 
                 if self.transform is not None:
                     if self.mode == 'train':

@@ -20,7 +20,10 @@ class CE_weight(nn.Module):
     def __init__(self, cls_num_list, E1 = 20, E2 = 50, E = 100):
         super(CE_weight, self).__init__()
         self.cls_num_list = cls_num_list
-        cls_num_list = torch.cuda.FloatTensor(cls_num_list)
+        #=====================old version=====================
+        # cls_num_list = torch.cuda.FloatTensor(cls_num_list)
+        #=====================old version=====================
+        cls_num_list = torch.tensor(cls_num_list, dtype=torch.float32, device='cuda')
 
         # weight of each class for imbalance dataset
         weight = torch.cuda.FloatTensor(1.0 / cls_num_list)
