@@ -100,6 +100,12 @@ class isic2018_dataset(Dataset):
                 self.df = pd.read_csv(os.path.join(path,'ISIC2018_test.csv'))
 
 
+        else:
+            with h5py.File(self.path, 'r') as f:
+                # Get original image
+                self.num_samples = len(f['images'])
+
+
     def __getitem__(self, item):
         if self.dataset_type != 'h5_file':
             #=============================================== old
@@ -129,7 +135,7 @@ class isic2018_dataset(Dataset):
             idx_str = str(item)
             with h5py.File(self.path, 'r') as f:
                 # Get original image
-                self.num_samples = len(f['images'])
+                # self.num_samples = len(f['images'])
                 image = f['images'][idx_str][:]
                 
                 # Get mask (equivalent to seg_prior in your original code)
