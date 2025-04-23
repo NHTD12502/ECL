@@ -23,9 +23,12 @@ import torchvision.transforms.v2 as transforms_v2
 '''Function to enhance image using mask and contour 3channel and 2 channel'''
 def enhance_image(image, mask, contour, enhanced_type='3channel'):
     if enhanced_type == '3channel':
-        image[:, 0, :, :] += mask + contour
-        image[:, 1, :, :] += mask + contour
-        image[:, 2, :, :] += mask + contour
+        print("shape of image:", image.shape)
+        print("shape of mask:", mask.shape)
+        print("shape of contour:", contour.shape)
+        image[ 0, :, :] += mask + contour
+        image[ 1, :, :] += mask + contour
+        image[ 2, :, :] += mask + contour
     elif enhanced_type == '2channel':
         image[:, 1, :, :] += mask 
         image[:, 2, :, :] += contour
