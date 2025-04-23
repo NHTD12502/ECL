@@ -167,6 +167,12 @@ def main(args):
                 # Method 1: Permute dimensions to change from (C,H,W) to (H,W,C)
                 img_numpy = np.transpose(img_tensor, (1, 2, 0))
                 
+                #check max and min value of img_numpy
+                print("img_numpy max: ",np.max(img_numpy))
+                print("img_numpy min: ",np.min(img_numpy))
+                #check ori_img max and min value
+                print("ori_img max: ",np.max(ori_img))
+                print("ori_img min: ",np.min(ori_img))
                 plt.figure(figsize=(10, 10))
                 plt.subplot(1, 2, 1)
 
