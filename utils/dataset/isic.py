@@ -107,6 +107,7 @@ class isic2018_dataset(Dataset):
             with h5py.File(self.path, 'r') as f:
                 # Get original image
                 self.num_samples = len(f['images'])
+                self.labels = f['metadata/labels'][:]
 
 
     def __getitem__(self, item):
