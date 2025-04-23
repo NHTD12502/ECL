@@ -204,8 +204,8 @@ class isic2018_dataset(Dataset):
                 contour = f['contours'][idx_str][:].astype(np.float32)
                 
                 # Convert to tv_tensors for compatibility with transforms
-                # mask = tv_tensors.Mask(mask)
-                # contour = tv_tensors.Mask(contour)
+                mask = tv_tensors.Mask(mask)
+                contour = tv_tensors.Mask(contour)
                 
                 # Use a placeholder label (you should replace this with actual labels if available)
                 label = self.labels[item]
