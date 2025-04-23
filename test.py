@@ -16,6 +16,7 @@
 '''
 
 import h5py
+from collections import Counter
 
 import argparse
 import torch
