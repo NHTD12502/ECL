@@ -18,36 +18,87 @@ from collections import Counter
 import torch
 import numpy as np
 
-augmentation_rand = transforms.Compose(
-    [transforms.Resize((224,224)),
-    transforms.RandomHorizontalFlip(p=0.5),
-    transforms.RandomApply([
-            transforms.ColorJitter(0.4, 0.4, 0.4, 0.1)  # not strengthened
-        ], p=0.8),
-    transforms.ToTensor()]
-    # transforms.Normalize((0.466, 0.471, 0.380), (0.195, 0.194, 0.192))]
-    )
+import torchvision.transforms.v2 as transforms_v2
 
-augmentation_sim = transforms.Compose(
-    [transforms.RandomResizedCrop(224,scale=(0.8,1.0)),
-    transforms.RandomHorizontalFlip(p=0.5),
-    transforms.RandomVerticalFlip(p=0.5),
-    transforms.RandomRotation(90),
-    transforms.RandomApply([
-            transforms.ColorJitter(0.4, 0.4, 0.4, 0.1)  # not strengthened
-        ], p=0.8),
-    transforms.RandomGrayscale(p=0.2),
-    transforms.ToTensor()]
-    # transforms.Normalize((0.466, 0.471, 0.380), (0.195, 0.194, 0.192))]
-    )
+'''Function to enhance image using mask and contour 3channel and 2 channel'''
+def enhance_image(image, mask, contour, enhanced_type='3channel'):
+    if enhanced_type == '3channel':
+        image[:, 0, :, :] += mask + contour
+        image[:, 1, :, :] += mask + contour
+        image[:, 2, :, :] += mask + contour
+    elif enhanced_type == '2channel':
+        image[:, 1, :, :] += mask 
+        image[:, 2, :, :] += contour
+    else:
+        raise ValueError("Invalid enhanced_type. Choose '3channel' or '2channel'.")
+
+    return image, mask, contour
+
+#=====================old version=====================
+# augmentation_rand = transforms.Compose(
+#     [transforms.Resize((224,224)),
+#     transforms.RandomHorizontalFlip(p=0.5),
+#     transforms.RandomApply([
+#             transforms.ColorJitter(0.4, 0.4, 0.4, 0.1)  # not strengthened
+#         ], p=0.8),
+#     transforms.ToTensor()]
+#     # transforms.Normalize((0.466, 0.471, 0.380), (0.195, 0.194, 0.192))]
+#     )
+
+# augmentation_sim = transforms.Compose(
+#     [transforms.RandomResizedCrop(224,scale=(0.8,1.0)),
+#     transforms.RandomHorizontalFlip(p=0.5),
+#     transforms.RandomVerticalFlip(p=0.5),
+#     transforms.RandomRotation(90),
+#     transforms.RandomApply([
+#             transforms.ColorJitter(0.4, 0.4, 0.4, 0.1)  # not strengthened
+#         ], p=0.8),
+#     transforms.RandomGrayscale(p=0.2),
+#     transforms.ToTensor()]
+#     # transforms.Normalize((0.466, 0.471, 0.380), (0.195, 0.194, 0.192))]
+#     )
 
 
-augmentation_test = transforms.Compose([
-        transforms.Resize(224),
-        transforms.ToTensor(),
-        # transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5)),
-        # transforms.Normalize((0.466, 0.471, 0.380), (0.195, 0.194, 0.192))
-    ])
+# augmentation_test = transforms.Compose([
+#         transforms.Resize(224),
+#         transforms.ToTensor(),
+#         # transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5)),
+#         # transforms.Normalize((0.466, 0.471, 0.380), (0.195, 0.194, 0.192))
+#     ])
+#=====================old version=====================
+
+#transform_v2
+augmentation_rand = transforms_v2.Compose(
+    [
+        transforms_v2.Resize((224,224)),
+        transforms_v2.RandomHorizontalFlip(p=0.5),
+        transforms_v2.RandomApply([
+                transforms_v2.ColorJitter(0.4, 0.4, 0.4, 0.1)  # not strengthened
+            ], p=0.8),
+        transforms_v2.ToTensor()
+    ]
+)
+
+augmentation_sim = transforms_v2.Compose(
+    [
+        transforms_v2.RandomResizedCrop(224,scale=(0.8,1.0)),
+        transforms_v2.RandomHorizontalFlip(p=0.5),
+        transforms_v2.RandomVerticalFlip(p=0.5),
+        transforms_v2.RandomRotation(90),
+        transforms_v2.RandomApply([
+                transforms_v2.ColorJitter(0.4, 0.4, 0.4, 0.1)  # not strengthened
+            ], p=0.8),
+        transforms_v2.RandomGrayscale(p=0.2),
+        transforms_v2.ToTensor()
+    ]
+)
+
+augmentation_test = transforms_v2.Compose(
+    [
+        transforms_v2.Resize(224),
+        transforms_v2.ToTensor(),
+    ]
+)
 
 class isic2019_dataset(Dataset):
     def __init__(self,path,transform,mode='train'):
@@ -88,11 +139,12 @@ class isic2019_dataset(Dataset):
 
 
 class isic2018_dataset(Dataset):
-    def __init__(self,path,transform,mode='train', dataset_type='h5_file'):
+    def __init__(self,path,transform,mode='train', dataset_type='h5_file', enhanced=False):
         self.dataset_type = dataset_type
         self.path = path
         self.transform = transform
         self.mode = mode
+        self.enhanced = enhanced
 
         if self.dataset_type != 'h5_file':
             if self.mode == 'train':
@@ -134,7 +186,7 @@ class isic2018_dataset(Dataset):
                 raise Exception("Transform is None")
                         #=============================================== old
 
-        else:
+        elif self.dataset_type == 'h5_file' :
             #item as index
             idx_str = str(item)
             with h5py.File(self.path, 'r') as f:
@@ -155,18 +207,38 @@ class isic2018_dataset(Dataset):
                 # Use a placeholder label (you should replace this with actual labels if available)
                 label = self.labels[item]
                 label = torch.LongTensor([label]).unsqueeze(0)
-                
-                if self.transform is not None:
-                    if self.mode == 'train':
-                        img1 = self.transform[0](image_pil)
-                        img2 = self.transform[1](image_pil)
 
-                        return [img1,img2],label
+                if self.enhanced: # new code: enhanced
+                    if self.transform is not None:
+                        if self.mode == 'train':
+                            img1,mask,contour = self.transform[0](image_pil,mask,contour)
+                            img2,mask,contour = self.transform[1](image_pil,mask,contour)
+
+                            # Enhance the image using mask and contour
+                            img1, mask, contour = enhance_image(img1, mask, contour, enhanced_type='3channel')
+                            img2, mask, contour = enhance_image(img2, mask, contour, enhanced_type='3channel')
+                            
+
+                            return [img1,img2],label
+                        else:
+                            img1 = self.transform(image_pil)
+                            return img1, label
                     else:
-                        img1 = self.transform(image_pil)
-                        return img1, label
-                else:
-                    return image, label, mask, contour
+                        return image, label, mask, contour
+                else:# original code: not enhanced
+                    if self.transform is not None:
+                        if self.mode == 'train':
+                            img1 = self.transform[0](image_pil)
+                            img2 = self.transform[1](image_pil)
+
+                            return [img1,img2],label
+                        else:
+                            img1 = self.transform(image_pil)
+                            return img1, label
+                    else:
+                        return image, label, mask, contour
+                
+        
 
     def __len__(self):
         if self.dataset_type != 'h5_file':
