@@ -111,7 +111,7 @@ def main(args):
 
     try:
         # Testing
-        model.load_state_dict(torch.load(args.model_path),strict=True)
+        model.load_state_dict(torch.load(args.model_path,weights_only=True),strict=True)
         model.eval()
 
         pro_diag, lab_diag = [], []

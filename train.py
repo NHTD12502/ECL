@@ -114,11 +114,11 @@ def main(args):
                                       batch_size=1, shuffle=False, num_workers=2)
     
     elif args.dataset == 'ISIC2018_enhanced':
-        train_iterator = DataLoader(isic2018_dataset(path=args.data_path, transform=transfrom_train, mode='train', dataset_type='h5_file'),
+        train_iterator = DataLoader(isic2018_dataset(path=args.data_path, transform=transfrom_train, mode='train', dataset_type='h5_file',enhanced=args.enhanced),
                                     batch_size=args.batch_size, shuffle=True, num_workers=4, drop_last=True)
-        valid_iterator = DataLoader(isic2018_dataset(path=args.data_path_val, transform=augmentation_test, mode='valid', dataset_type='h5_file'),
+        valid_iterator = DataLoader(isic2018_dataset(path=args.data_path_val, transform=augmentation_test, mode='valid', dataset_type='h5_file',enhanced=args.enhanced),
                                     batch_size=1, shuffle=False, num_workers=2)
-        test_iterator = DataLoader(isic2018_dataset(path=args.data_path_test, transform=augmentation_test, mode='test', dataset_type='h5_file'),
+        test_iterator = DataLoader(isic2018_dataset(path=args.data_path_test, transform=augmentation_test, mode='test', dataset_type='h5_file',enhanced=args.enhanced),
                                    batch_size=1, shuffle=False, num_workers=2)
 
 
@@ -302,7 +302,7 @@ def main(args):
         if complete:
 
             for e in range(6, args.epochs//10):
-                model.load_state_dict(torch.load(os.path.join(args.model_path, 'model_{}.pth'.format((e+1)*10))),strict=True)
+                model.load_state_dict(torch.load(os.path.join(args.model_path, 'model_{}.pth'.format((e+1)*10)),weights_only=True),strict=True)
                 model.eval()
 
                 pro_diag, lab_diag = [], []
@@ -328,7 +328,7 @@ def main(args):
                     Auc(pro_diag, lab_diag, args.num_classes, log_file)
                     log_file.flush()
 
-            model.load_state_dict(torch.load(old_model_path),strict=True)
+            model.load_state_dict(torch.load(old_model_path,weights_only=True),strict=True)
             model.eval()
 
             pro_diag, lab_diag = [], []
@@ -371,6 +371,10 @@ parser.add_argument('--data_path_test', type=str, default='./data/ISIC2018/', he
 parser.add_argument('--dataset', type=str, default='ISIC2018',choices=['ISIC2018','ISIC2019','ISIC2018_enhanced'], help='the name of the dataset')
 parser.add_argument('--model_path', type=str, default="./Experiment/ISIC_CL/ISIC2018/test_git/", help='the path of the model')
 parser.add_argument('--log_path', type=str, default=None, help='the path of the log')
+# enhanced or not
+parser.add_argument('--enhanced', type=bool, default=False, help='whether to use enhanced dataset')
+
+
 
 #backbone type
 parser.add_argument('--backbone', type=str, default='resnet50', choices=['resnet50','resnet18'], help='the backbone of the model')
