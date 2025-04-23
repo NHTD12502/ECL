@@ -69,7 +69,7 @@ def main(args):
 
 
     '''load models'''
-    model = ECL_model(num_classes=args.num_classes,feat_dim=args.feat_dim)
+    model = ECL_model(num_classes=args.num_classes,feat_dim=args.feat_dim, backbone_type=args.backbone)
     proxy_num_list = get_proxies_num(args.cls_num_list)
     model_proxy = balanced_proxies(dim=args.feat_dim,proxy_num=sum(proxy_num_list))
 
@@ -325,6 +325,8 @@ parser.add_argument('--dataset', type=str, default='ISIC2018',choices=['ISIC2018
 parser.add_argument('--model_path', type=str, default="./Experiment/ISIC_CL/ISIC2018/test_git/", help='the path of the model')
 parser.add_argument('--log_path', type=str, default=None, help='the path of the log')
 
+#backbone type
+parser.add_argument('--backbone', type=str, default='resnet50', choices=['resnet50','resnet18'], help='the backbone of the model')
 
 # training parameters
 parser.add_argument('--batch_size', type=int, default=64, help='batch size')

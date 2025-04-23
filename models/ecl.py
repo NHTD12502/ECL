@@ -24,14 +24,36 @@ class balanced_proxies(nn.Module):
 
 
 class ECL_model(nn.Module):
-    def __init__(self,num_classes=8,feat_dim=512):
+    # def __init__(self,num_classes=8,feat_dim=512):
+    #     super(ECL_model, self).__init__()
+    #     cnns = models.resnet50(weights=models.ResNet50_Weights.IMAGENET1K_V1)
+    #     self.backbone = torch.nn.Sequential(*(list(cnns.children())[:-1]))
+
+    #     self.num_classes = num_classes
+
+    #     dimension = 512*4
+
+    #     self.head = nn.Sequential(
+    #         nn.Linear(dimension, feat_dim),
+    #         nn.BatchNorm1d(feat_dim),
+    #         nn.ReLU(inplace=True),
+    #         nn.Linear(feat_dim, feat_dim)
+    #     )
+
+    #     self.fc = nn.Linear(dimension,self.num_classes)
+    def __init__(self, num_classes=8, feat_dim=512, backbone_type='resnet50'):
         super(ECL_model, self).__init__()
-        cnns = models.resnet50(weights=models.ResNet50_Weights.IMAGENET1K_V1)
+        
+        # Select backbone based on the specified type
+        if backbone_type == 'resnet18':
+            cnns = models.resnet18(weights=models.ResNet18_Weights.IMAGENET1K_V1)
+            dimension = 512  # ResNet18's final feature dimension
+        else:  # default to resnet50
+            cnns = models.resnet50(weights=models.ResNet50_Weights.IMAGENET1K_V1)
+            dimension = 512*4  # ResNet50's final feature dimension
+            
         self.backbone = torch.nn.Sequential(*(list(cnns.children())[:-1]))
-
         self.num_classes = num_classes
-
-        dimension = 512*4
 
         self.head = nn.Sequential(
             nn.Linear(dimension, feat_dim),
@@ -40,7 +62,7 @@ class ECL_model(nn.Module):
             nn.Linear(feat_dim, feat_dim)
         )
 
-        self.fc = nn.Linear(dimension,self.num_classes)
+        self.fc = nn.Linear(dimension, self.num_classes)
 
     def forward(self,x):
         if isinstance(x, list):
