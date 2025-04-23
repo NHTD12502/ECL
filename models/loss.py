@@ -47,8 +47,8 @@ class CE_weight(nn.Module):
         :return: loss
         '''
         if e <= self.E1:
-            print(f"Output shape: {x.shape}, Target shape: {target.shape}")
-            print(f"Output dtype: {x.dtype}, Target dtype: {target.dtype}")
+            # print(f"Output shape: {x.shape}, Target shape: {target.shape}")
+            # print(f"Output dtype: {x.dtype}, Target dtype: {target.dtype}")
             return F.cross_entropy(x, target)
 
         if e > self.E1 and e <= self.E2:
