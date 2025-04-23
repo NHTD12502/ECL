@@ -155,10 +155,18 @@ def main(args):
 
                 #visualize the data
                 # if batch_index == 0:
+                #find shape of data
+                print("data shape: ",data.shape)
+                print("label shape: ",label.shape)
                 data = data[0].cpu().numpy()
                 label = label[0].cpu().numpy()
-                plt.imshow(data[0])
-                plt.title(label[0])
+                img_tensor = data[0]
+
+                # Method 1: Permute dimensions to change from (C,H,W) to (H,W,C)
+                img_numpy = img_tensor.permute(1, 2, 0).cpu().numpy()
+                plt.imshow(img_numpy)
+                # plt.imshow(data[0])
+                # plt.title(label[0])
                 plt.show()
 
                 if args.cuda:
