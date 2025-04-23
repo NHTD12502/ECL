@@ -117,7 +117,7 @@ def main(args):
         pro_diag, lab_diag = [], []
         confusion_diag = ConfusionMatrix(num_classes=args.num_classes, labels=list(range(args.num_classes)))
         with torch.no_grad():
-            for batch_index, (data, label) in tqdm(enumerate(test_iterator), desc='Testing', total=len(test_iterator)):
+            for batch_index, (data, label) in tqdm.tqdm(enumerate(test_iterator), desc='Testing', total=len(test_iterator)):
                 if args.cuda:
                     data = data.cuda()
                     label = label.cuda()
