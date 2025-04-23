@@ -151,7 +151,7 @@ def main(args):
             # lr_scheduler_proxies.step()
             optimizer_proxies.zero_grad()
 
-            for batch_index, (data, label), original_image in tqdm.tqdm(enumerate(train_iterator), total=len(train_iterator)):
+            for batch_index, (data, label,original_image ) in tqdm.tqdm(enumerate(train_iterator), total=len(train_iterator)):
 
                 #visualize the data
                 # if batch_index == 0:
