@@ -23,11 +23,12 @@ class CE_weight(nn.Module):
         #=====================old version=====================
         # cls_num_list = torch.cuda.FloatTensor(cls_num_list)
         #=====================old version=====================
+        weight = torch.tensor(1.0 / np.array(cls_num_list), dtype=torch.float32, device='cuda')
         cls_num_list = torch.tensor(cls_num_list, dtype=torch.float32, device='cuda')
 
         # weight of each class for imbalance dataset
         # weight = torch.cuda.FloatTensor(1.0 / cls_num_list)
-        weight = torch.tensor(1.0 / np.array(cls_num_list), dtype=torch.float32, device='cuda')
+        
 
 
         self.weight = (weight / weight.sum()) * len(cls_num_list)
