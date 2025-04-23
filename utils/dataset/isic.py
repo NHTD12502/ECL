@@ -139,7 +139,7 @@ class isic2019_dataset(Dataset):
 
 
 class isic2018_dataset(Dataset):
-    def __init__(self,path,transform,mode='train', dataset_type='h5_file', enhanced=False):
+    def __init__(self,path,transform,mode='train', dataset_type='h5_file', enhanced=True):
         self.dataset_type = dataset_type
         self.path = path
         self.transform = transform
