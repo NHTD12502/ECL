@@ -135,7 +135,7 @@ parser = argparse.ArgumentParser(description='Training for the classification ta
 
 #dataset
 parser.add_argument('--data_path', type=str, default='./data/ISIC2019/', help='the path of the data')
-parser.add_argument('--dataset', type=str, default='ISIC2019',choices=['ISIC2018','ISIC2019'], help='the name of the dataset')
+parser.add_argument('--dataset', type=str, default='ISIC2019',choices=['ISIC2018','ISIC2019',"ISIC2018_enhanced"], help='the name of the dataset')
 parser.add_argument('--model_path', type=str, default = './weights/model-ISIC2019.pth', help='the path of the model')
 parser.add_argument('--log_path', type=str, default = None, help='the path of the log')
 
