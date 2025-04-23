@@ -214,7 +214,7 @@ def main(args):
                     val_confusion_diag.update(predicted_results.cpu().numpy(), diagnosis_label.cpu().numpy())
 
                 dia_acc = val_confusion_diag.summary(log_file)
-                Auc(pro_diag, lab_diag, args.num_classes, log_file)
+                # Auc(pro_diag, lab_diag, args.num_classes, log_file)
                 f_score_list = val_confusion_diag.get_f1score()
 
                 end_time_epoch = time.time()
