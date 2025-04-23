@@ -173,6 +173,12 @@ def main(args):
                 #check ori_img max and min value
                 print("ori_img max: ",np.max(ori_img))
                 print("ori_img min: ",np.min(ori_img))
+                #clip the img_numpy to 0-1
+                img_numpy = np.clip(img_numpy, 0, 1)
+                #check img_numpy max and min value
+                print("img_numpy max: ",np.max(img_numpy))
+                print("img_numpy min: ",np.min(img_numpy))
+                
                 plt.figure(figsize=(10, 10))
                 plt.subplot(1, 2, 1)
 
