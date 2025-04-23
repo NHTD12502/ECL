@@ -36,37 +36,104 @@ class ConfusionMatrix(object):
        else:
             self.matrix[int(pred),int(label)] += 1
 
-    def summary(self,File):
-        #calculate accuracy
+    # def summary(self,File):
+    #     #calculate accuracy
+    #     sum_TP = 0
+    #     for i in range(self.num_classes):
+    #         sum_TP += self.matrix[i,i] #混淆矩阵对角线的元素之和，也就是分类正确的数量
+    #     self.acc = sum_TP/np.sum(self.matrix) #总体准确率
+    #     print("the model accuracy is :{:.4f}".format(self.acc))
+    #     File.write("the model accuracy is {:.4f}".format(self.acc)+"\n")
+
+    #     #precision,recall,specificity
+    #     table=PrettyTable() #创建一个表格
+    #     table.field_names=["","Precision","Sensitivity","Specificity","F1-score"]
+    #     for i in range(self.num_classes):
+    #         TP=self.matrix[i,i]
+    #         FP = np.sum(self.matrix[i, :]) - TP
+    #         FN = np.sum(self.matrix[:, i]) - TP
+    #         TN = np.sum(self.matrix) - TP - FP - FN
+
+    #         Precision=round(TP/(TP+FP),4) if TP+FP!=0 else 0.
+    #         Sensitivity=round(TP/(TP+FN),4) if TP+FN!=0 else 0.
+    #         Specificity=round(TN/(TN+FP),4) if TN+FP!=0 else 0.
+    #         F1_score = round((2*Sensitivity*Precision)/(Sensitivity+Precision),4) if (Sensitivity!=0 and Specificity!=0) else 0
+
+    #         self.PrecisionofEachClass[i]=Precision
+    #         self.SensitivityofEachClass[i]=Sensitivity
+    #         self.SpecificityofEachClass[i]=Specificity
+    #         self.F1_scoreofEachClass[i] = F1_score
+
+    #         table.add_row([self.labels[i],Precision,Sensitivity,Specificity,F1_score])
+    #     print(table)
+    #     File.write(str(table)+'\n')
+    #     return self.acc
+
+    def summary(self, File):
+        # calculate accuracy
         sum_TP = 0
         for i in range(self.num_classes):
-            sum_TP += self.matrix[i,i] #混淆矩阵对角线的元素之和，也就是分类正确的数量
-        self.acc = sum_TP/np.sum(self.matrix) #总体准确率
+            sum_TP += self.matrix[i,i] 
+        self.acc = sum_TP/np.sum(self.matrix)
         print("the model accuracy is :{:.4f}".format(self.acc))
         File.write("the model accuracy is {:.4f}".format(self.acc)+"\n")
 
-        #precision,recall,specificity
-        table=PrettyTable() #创建一个表格
-        table.field_names=["","Precision","Sensitivity","Specificity","F1-score"]
+        # precision,recall,specificity
+        table = PrettyTable()
+        table.field_names = ["", "Precision", "Sensitivity", "Specificity", "F1-score"]
+        
+        # Initialize variables for macro averaging
+        macro_precision = 0.0
+        macro_sensitivity = 0.0
+        macro_specificity = 0.0
+        macro_f1 = 0.0
+        
         for i in range(self.num_classes):
-            TP=self.matrix[i,i]
+            TP = self.matrix[i,i]
             FP = np.sum(self.matrix[i, :]) - TP
             FN = np.sum(self.matrix[:, i]) - TP
             TN = np.sum(self.matrix) - TP - FP - FN
 
-            Precision=round(TP/(TP+FP),4) if TP+FP!=0 else 0.
-            Sensitivity=round(TP/(TP+FN),4) if TP+FN!=0 else 0.
-            Specificity=round(TN/(TN+FP),4) if TN+FP!=0 else 0.
-            F1_score = round((2*Sensitivity*Precision)/(Sensitivity+Precision),4) if (Sensitivity!=0 and Specificity!=0) else 0
+            Precision = round(TP/(TP+FP), 4) if TP+FP!=0 else 0.
+            Sensitivity = round(TP/(TP+FN), 4) if TP+FN!=0 else 0.
+            Specificity = round(TN/(TN+FP), 4) if TN+FP!=0 else 0.
+            F1_score = round((2*Sensitivity*Precision)/(Sensitivity+Precision), 4) if (Sensitivity!=0 and Precision!=0) else 0
 
-            self.PrecisionofEachClass[i]=Precision
-            self.SensitivityofEachClass[i]=Sensitivity
-            self.SpecificityofEachClass[i]=Specificity
+            self.PrecisionofEachClass[i] = Precision
+            self.SensitivityofEachClass[i] = Sensitivity
+            self.SpecificityofEachClass[i] = Specificity
             self.F1_scoreofEachClass[i] = F1_score
+            
+            # Accumulate for macro averaging
+            macro_precision += Precision
+            macro_sensitivity += Sensitivity
+            macro_specificity += Specificity
+            macro_f1 += F1_score
 
-            table.add_row([self.labels[i],Precision,Sensitivity,Specificity,F1_score])
+            table.add_row([self.labels[i], Precision, Sensitivity, Specificity, F1_score])
+        
+        # Calculate macro averages
+        macro_precision /= self.num_classes
+        macro_sensitivity /= self.num_classes
+        macro_specificity /= self.num_classes
+        macro_f1 /= self.num_classes
+        
+        # Add a row for macro average
+        table.add_row(["Macro Avg", 
+                    round(macro_precision, 4), 
+                    round(macro_sensitivity, 4), 
+                    round(macro_specificity, 4), 
+                    round(macro_f1, 4)])
+        
         print(table)
         File.write(str(table)+'\n')
+        
+        # You can also save these macro metrics as attributes
+        self.macro_precision = macro_precision
+        self.macro_sensitivity = macro_sensitivity
+        self.macro_specificity = macro_specificity
+        self.macro_f1 = macro_f1
+        
         return self.acc
 
     def get_f1score(self):
