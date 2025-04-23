@@ -66,6 +66,8 @@ class CE_weight(nn.Module):
             # per_cls_weights = torch.cuda.FloatTensor(per_cls_weights)
             # per_cls_weights = torch.tensor(per_cls_weights, dtype=torch.float32, device='cuda')
             per_cls_weights = torch.tensor(per_cls_weights, dtype=torch.float32, device='cuda')
+            print(f"Output shape: {x.shape}, Target shape: {target.shape}")
+            print(f"Output dtype: {x.dtype}, Target dtype: {target.dtype}")
             return F.cross_entropy(x, target, weight=per_cls_weights)
 
 class BHP(nn.Module):
