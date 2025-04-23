@@ -156,48 +156,49 @@ def main(args):
                 #visualize the data
                 # if batch_index == 0:
                 #find shape of data
-                print("data shape: ",data[0].shape)
-                print("label shape: ",label[0].shape)
-                data = data[0].cpu().numpy()
-                print("data shape: ",data.shape)
-                label = label[0].cpu().numpy()
-                img_tensor = data[5]
-                ori_img = original_image[5].cpu().numpy()
-                ori_img = np.transpose(ori_img, (1, 2, 0))
-                # Method 1: Permute dimensions to change from (C,H,W) to (H,W,C)
-                img_numpy = np.transpose(img_tensor, (1, 2, 0))
+                #========================================================================================
+                # print("data shape: ",data[0].shape)
+                # print("label shape: ",label[0].shape)
+                # data = data[0].cpu().numpy()
+                # print("data shape: ",data.shape)
+                # label = label[0].cpu().numpy()
+                # img_tensor = data[5]
+                # ori_img = original_image[5].cpu().numpy()
+                # ori_img = np.transpose(ori_img, (1, 2, 0))
+                # # Method 1: Permute dimensions to change from (C,H,W) to (H,W,C)
+                # img_numpy = np.transpose(img_tensor, (1, 2, 0))
                 
-                #check max and min value of img_numpy
-                print("img_numpy max: ",np.max(img_numpy))
-                print("img_numpy min: ",np.min(img_numpy))
-                #check ori_img max and min value
-                print("ori_img max: ",np.max(ori_img))
-                print("ori_img min: ",np.min(ori_img))
-                #clip the img_numpy to 0-1
-                img_numpy = np.clip(img_numpy, 0, 1)
-                #check img_numpy max and min value
-                print("img_numpy max: ",np.max(img_numpy))
-                print("img_numpy min: ",np.min(img_numpy))
+                # #check max and min value of img_numpy
+                # print("img_numpy max: ",np.max(img_numpy))
+                # print("img_numpy min: ",np.min(img_numpy))
+                # #check ori_img max and min value
+                # print("ori_img max: ",np.max(ori_img))
+                # print("ori_img min: ",np.min(ori_img))
+                # #clip the img_numpy to 0-1
+                # img_numpy = np.clip(img_numpy, 0, 1)
+                # #check img_numpy max and min value
+                # print("img_numpy max: ",np.max(img_numpy))
+                # print("img_numpy min: ",np.min(img_numpy))
                 
-                plt.figure(figsize=(10, 10))
-                plt.subplot(1, 2, 1)
+                # plt.figure(figsize=(10, 10))
+                # plt.subplot(1, 2, 1)
 
-                plt.imshow(img_numpy)
-                # plt.title(f"Label: {label_np[0]}")
-                plt.axis('on')  # Display axes
+                # plt.imshow(img_numpy)
+                # # plt.title(f"Label: {label_np[0]}")
+                # plt.axis('on')  # Display axes
                 
-                plt.subplot(1, 2, 2)
-                plt.imshow(ori_img)
+                # plt.subplot(1, 2, 2)
+                # plt.imshow(ori_img)
 
-                # For Kaggle specifically
-                plt.tight_layout()
-                plt.savefig('sample_image.png')  # Save the figure first
+                # # For Kaggle specifically
+                # plt.tight_layout()
+                # plt.savefig('sample_image.png')  # Save the figure first
                 
-                # Try different display methods
-                plt.show()  # Display the figure
+                # # Try different display methods
+                # plt.show()  # Display the figure
                 
-                plt.close()
-
+                # plt.close()
+                #========================================================================================
                 if args.cuda:
                     for i in range(len(data)):
                         data[i] = data[i].cuda()
