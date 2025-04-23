@@ -26,6 +26,7 @@ from utils.eval_metrics import ConfusionMatrix, Auc
 from models.ecl import ECL_model,balanced_proxies
 from models.loss import CE_weight,BHP
 from collections import Counter
+from matplotlib import pyplot as plt
 
 '''function for counting cls_num_list in h5 file'''
 def count_class_label (h5_file):
@@ -151,6 +152,14 @@ def main(args):
             optimizer_proxies.zero_grad()
 
             for batch_index, (data, label) in tqdm.tqdm(enumerate(train_iterator), total=len(train_iterator)):
+
+                #visualize the data
+                if batch_index == 0:
+                    data = data[0].cpu().numpy()
+                    label = label[0].cpu().numpy()
+                    plt.imshow(data[0])
+                    plt.title(label[0])
+                    plt.show()
 
                 if args.cuda:
                     for i in range(len(data)):
