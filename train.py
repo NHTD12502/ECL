@@ -166,7 +166,7 @@ def main(args):
                 img_numpy = np.transpose(img_tensor, (1, 2, 0))
                 plt.figure(figsize=(10, 10))
                 plt.imshow(img_numpy)
-                plt.title(f"Label: {label_np[0]}")
+                # plt.title(f"Label: {label_np[0]}")
                 plt.axis('on')  # Display axes
                 
                 # For Kaggle specifically
