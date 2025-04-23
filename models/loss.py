@@ -104,7 +104,10 @@ class BHP(nn.Module):
 
         # get labels of features and proxies
         targets = torch.cat([targets.repeat(2, 1), targets_proxy], dim=0)
-        batch_cls_count = torch.eye(len(self.cls_num_list))[targets].sum(dim=0).squeeze()
+        batch_cls_count = torch.eye(len(self.cls_num_list), device=targets.device)[targets].sum(dim=0).squeeze()
+
+
+        # batch_cls_count = torch.eye(len(self.cls_num_list))[targets].sum(dim=0).squeeze()
 
         mask = torch.eq(targets, targets.T).float().to(device)
         logits_mask = torch.scatter(
