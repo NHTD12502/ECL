@@ -154,12 +154,12 @@ def main(args):
             for batch_index, (data, label) in tqdm.tqdm(enumerate(train_iterator), total=len(train_iterator)):
 
                 #visualize the data
-                if batch_index == 0:
-                    data = data[0].cpu().numpy()
-                    label = label[0].cpu().numpy()
-                    plt.imshow(data[0])
-                    plt.title(label[0])
-                    plt.show()
+                # if batch_index == 0:
+                data = data[0].cpu().numpy()
+                label = label[0].cpu().numpy()
+                plt.imshow(data[0])
+                plt.title(label[0])
+                plt.show()
 
                 if args.cuda:
                     for i in range(len(data)):
