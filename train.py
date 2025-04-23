@@ -162,9 +162,11 @@ def main(args):
                 print("data shape: ",data.shape)
                 label = label[0].cpu().numpy()
                 img_tensor = data[5]
-
+                ori_img = original_image[5].cpu().numpy()
+                ori_img = np.transpose(ori_img, (1, 2, 0))
                 # Method 1: Permute dimensions to change from (C,H,W) to (H,W,C)
                 img_numpy = np.transpose(img_tensor, (1, 2, 0))
+                
                 plt.figure(figsize=(10, 10))
                 plt.subplot(1, 2, 1)
 
@@ -173,7 +175,7 @@ def main(args):
                 plt.axis('on')  # Display axes
                 
                 plt.subplot(1, 2, 2)
-                plt.imshow(original_image[5].cpu().numpy())
+                plt.imshow(ori_img)
 
                 # For Kaggle specifically
                 plt.tight_layout()
