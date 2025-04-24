@@ -26,9 +26,9 @@ def enhance_image(image, mask, contour, enhanced_type='3channel'):
         # print("shape of image:", image.shape)
         # print("shape of mask:", mask.shape)
         # print("shape of contour:", contour.shape)
-        image[ 0, :, :] += mask + contour
-        image[ 1, :, :] += mask + contour
-        image[ 2, :, :] += mask + contour
+        image[ 0, :, :] = image[ 0, :, :] + mask + contour
+        image[ 1, :, :] = image[ 0, :, :] + mask + contour
+        image[ 2, :, :] = image[ 0, :, :] + mask + contour
     elif enhanced_type == '2channel':
         image[:, 1, :, :] += mask 
         image[:, 2, :, :] += contour
