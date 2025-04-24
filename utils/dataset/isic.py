@@ -27,8 +27,8 @@ def enhance_image(image, mask, contour, enhanced_type='3channel'):
         # print("shape of mask:", mask.shape)
         # print("shape of contour:", contour.shape)
         image[ 0, :, :] = image[ 0, :, :] + mask + contour
-        image[ 1, :, :] = image[ 0, :, :] + mask + contour
-        image[ 2, :, :] = image[ 0, :, :] + mask + contour
+        image[ 1, :, :] = image[ 1, :, :] + mask + contour
+        image[ 2, :, :] = image[ 2, :, :] + mask + contour
     elif enhanced_type == '2channel':
         image[:, 1, :, :] += mask 
         image[:, 2, :, :] += contour
@@ -126,7 +126,7 @@ augmentation_sim = transforms_v2.Compose(
         # transforms_v2.RandomApply([
         #         transforms_v2.ColorJitter(0.4, 0.4, 0.4, 0.1)  # not strengthened
         #     ], p=0.8),
-        transforms_v2.RandomGrayscale(p=0.2),
+        # transforms_v2.RandomGrayscale(p=0.2),
         transforms_v2.ToTensor(),
         # transforms_v2.Normalize((0.485, 0.456, 0.406), (0.229, 0.224, 0.225))
     ]
