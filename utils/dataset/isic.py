@@ -113,7 +113,8 @@ augmentation_rand = transforms_v2.Compose(
             ], p=0.8),
         
         transforms_v2.ToTensor(),
-        transforms_v2.Normalize((0.485, 0.456, 0.406), (0.229, 0.224, 0.225))    ]
+        # transforms_v2.Normalize((0.485, 0.456, 0.406), (0.229, 0.224, 0.225))    
+        ]
 )
 
 augmentation_sim = transforms_v2.Compose(
@@ -127,7 +128,7 @@ augmentation_sim = transforms_v2.Compose(
             ], p=0.8),
         transforms_v2.RandomGrayscale(p=0.2),
         transforms_v2.ToTensor(),
-        transforms_v2.Normalize((0.485, 0.456, 0.406), (0.229, 0.224, 0.225))
+        # transforms_v2.Normalize((0.485, 0.456, 0.406), (0.229, 0.224, 0.225))
     ]
 )
 
@@ -136,7 +137,7 @@ augmentation_test = transforms_v2.Compose(
         transforms_v2.Resize(224),
         
         transforms_v2.ToTensor(),
-        transforms_v2.Normalize((0.485, 0.456, 0.406), (0.229, 0.224, 0.225))
+        # transforms_v2.Normalize((0.485, 0.456, 0.406), (0.229, 0.224, 0.225))
     ]
 )
 
@@ -187,6 +188,7 @@ class isic2018_dataset(Dataset):
         self.mode = mode
         self.enhanced = enhanced
         self.enhanced_flag = False
+        self.normalize = transforms_v2.Normalize((0.485, 0.456, 0.406), (0.229, 0.224, 0.225))
 
         if self.dataset_type != 'h5_file':
             if self.mode == 'train':
@@ -264,15 +266,21 @@ class isic2018_dataset(Dataset):
                             original_image = transforms_v2.ToTensor()(original_image)
                             img1,mask1,contour1 = self.transform[0](image_pil,mask,contour)
                             img2,mask2,contour2 = self.transform[1](image_pil,mask,contour)
+                            img1 = self.normalize(img1)
+                            img2 = self.normalize(img2)
+
 
                             # Enhance the image using mask and contour
                             img1, mask, contour = enhance_image(img1, mask1, contour1, enhanced_type='3channel')
                             img2, mask, contour = enhance_image(img2, mask2, contour2, enhanced_type='3channel')
                             
+                           
 
                             return [img1,img2],label, original_image
                         else:
                             img1,mask1,contour1 = self.transform(image_pil,mask,contour)
+
+                            img1 = self.normalize(img1)
 
                             # Enhance the image using mask and contour
                             img1, mask1, contour1 = enhance_image(img1, mask1, contour1, enhanced_type='3channel')
