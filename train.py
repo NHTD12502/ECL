@@ -155,8 +155,8 @@ def main(args):
 
                 #visualize the data
                 # if batch_index == 0:
-                #find shape of data
-                #========================================================================================
+                # find shape of data
+                # ========================================================================================
                 # print("data shape: ",data[0].shape)
                 # print("label shape: ",label[0].shape)
                 # data = data[0].cpu().numpy()
