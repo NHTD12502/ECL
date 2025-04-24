@@ -175,6 +175,11 @@ def main(args):
                 print("ori_img max: ",np.max(ori_img))
                 print("ori_img min: ",np.min(ori_img))
                 #clip the img_numpy to 0-1
+                mean = np.array([0.485, 0.456, 0.406])
+                std = np.array([0.229, 0.224, 0.225])
+
+                            #     orig_img = orig_img * std + mean
+                img_numpy = img_numpy * std + mean
                 img_numpy = np.clip(img_numpy, 0, 1)
                 #check img_numpy max and min value
                 print("img_numpy max: ",np.max(img_numpy))
